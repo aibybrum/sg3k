@@ -1,4 +1,4 @@
-# Introducing the Sw00pGenerator3000 (SG3K)
+# Sw00pGenerator3000 (SG3K)
 
 The Sw00pGenerator3000 offers a suite of visualizations designed to provide a comprehensive understanding of your skydive swoop landing. These visualizations deliver an in-depth analysis of your performance, enabling you to pinpoint areas for improvement and enhance your skills. With these tools, you can:
 
