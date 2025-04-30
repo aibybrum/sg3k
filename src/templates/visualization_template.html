@@ -1,0 +1,7 @@
+<h3>{{ title }}</h3>
+<p>{{ description }}</p>
+<ul>
+    {% for detail in details %}
+    <li><b>{{ detail.label }}:</b> {{ detail.content }}</li>
+    {% endfor %}
+</ul>

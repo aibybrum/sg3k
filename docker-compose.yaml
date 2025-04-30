@@ -1,0 +1,11 @@
+services:
+  jupyter_notebook:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 8888:8888
+    volumes:
+      - ./data:/home/jovyan/data
+      - ./notebooks:/home/jovyan/notebooks
+      - ./src:/home/jovyan/src
+      - .env:/home/jovyan/.env

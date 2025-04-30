@@ -1,0 +1,54 @@
+<h3>Configuration Details</h3>
+<style>
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #f2f2f2;
+  color: black;
+}
+td {
+  line-height: 1.2;
+}
+</style>
+<b>**Elevation will be displayed in feet</b>
+<br>
+<table>
+<tr><th>Parameter</th><th>Description</th></tr>
+<tr>
+  <td><b>Dropzone Elevation</b><br>Type: float<br>Default: None</td>
+  <td>If <code>dropzone_elevation</code> is set to <code>None</code>, the elevation will be dynamically set to the last point in the dataset.<br>Example: Elevation for MOORSELEEUHH 20.12</td>
+</tr>
+<tr>
+  <td><b>Speed Metric</b><br>Type: string<br>Default: km/u</td>
+  <td>Determines the unit of speed measurement.</td>
+</tr>
+<tr>
+  <td><b>Distance Metric</b><br>Type: string<br>Default: m</td>
+  <td>Determines the unit of distance measurement.</td>
+</tr>
+<tr>
+  <td><b>Toggle Search</b><br>Type: boolean<br>Default: True</td>
+  <td>If <code>True</code>, toggle search will be displayed in the visualizations.</td>
+</tr>
+<tr>
+  <td><b>Front Riser</b><br>Type: boolean<br>Default: False</td>
+  <td>If <code>True</code>, front riser will be displayed in the visualizations.</td>
+</tr>
+<tr>
+  <td><b>Point After Initiation</b><br>Type: float<br>Default: 3</td>
+  <td>Time in seconds for a point to appear after a front riser or initiated turn.<br>Set to <code>None</code> if not wanted to display.</td>
+</tr>
+<tr>
+  <td><b>Pattern Elevations</b><br>Type: dict<br>Default: {'downwind': 1400, 'base': 1100}</td>
+  <td>POM is automatically detected. <code>downwind</code> is <b>mandatory</b>. <code>base</code> can be <code>None</code>.</td>
+</tr>
+</table>

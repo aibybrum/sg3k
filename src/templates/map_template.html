@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>SG3K</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
+</head>
+<body>
+<div id="map" style="width: {{width}}%; height: {{height}}px;"></div>
+<script>
+    mapboxgl.accessToken = '{{token}}';
+
+    var map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/satellite-streets-v12',
+        center: [{{mean_lon}}, {{mean_lat}}],
+        zoom: 15,
+        pitch: 20
+    });
+    
+    var geojsonData = {{geojson_data_js}};
+
+    map.on('load', function () {
+        map.addSource('elevation', {
+            'type': 'geojson',
+            'data': geojsonData
+        });
+
+        map.addLayer({
+            'id': '3d-points',
+            'type': 'fill-extrusion',
+            'source': 'elevation',
+            'paint': {
+                'fill-extrusion-color': ['get', 'color'],
+                'fill-extrusion-height': ['get', 'elevation']
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "sg3k"
+version = "0.1.0"
+description = "SWOOPGENERATOR3000"
+authors = ["Bram Langmans"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+[tool.poetry.group.notebook.dependencies]
+numpy = "^2.1.0"
+pandas = "^2.2.2"
+plotly = "^5.23.0"
+peakutils = "^1.3.5"
+geopy = "^2.4.1"
+pyproj = "^3.6.1"
+utm = "^0.7.0"
+seaborn = "^0.13.2"
+pyarrow = "^19.0.1"
+python-dotenv = "^1.0.1"
+panel = "^1.4.5"
+mapboxgl = "^0.10.2"
+import-ipynb = "^0.1.4"
+ipywidgets = "^8.1.5"
+nbimporter = "^0.3.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
