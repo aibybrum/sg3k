@@ -18,6 +18,8 @@ COPY --from=requirements-stage /tmp/requirements.txt /home/jovyan/requirements.t
 
 RUN pip install --no-cache-dir --upgrade -r /home/jovyan/requirements.txt
 
+ENV PYTHONPATH="${PYTHONPATH}:/home/jovyan/src"
+
 EXPOSE 8888
 
 CMD ["start-notebook.sh", "--NotebookApp.token="]
