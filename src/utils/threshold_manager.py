@@ -6,7 +6,7 @@ from helpers import FileHelper
 
 
 class ThresholdManager:
-    def __init__(self, config_path="./config/thresholds_config.yaml", validator=None):
+    def __init__(self, config_path="../config/thresholds_config.yaml", validator=None):
         self._validator = validator or Validator()
         if config_path is None:
             ErrorHandler.log_and_raise_error(ValueError, "Config path cannot be None")

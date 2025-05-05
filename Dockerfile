@@ -18,6 +18,10 @@ COPY --from=requirements-stage /tmp/requirements.txt /home/jovyan/requirements.t
 
 RUN pip install --no-cache-dir --upgrade -r /home/jovyan/requirements.txt
 
+COPY jupyter_notebook_config.py /home/jovyan/.jupyter/
+
+RUN rm -rf /home/jovyan/work
+
 ENV PYTHONPATH="${PYTHONPATH}:/home/jovyan/src"
 
 EXPOSE 8888
