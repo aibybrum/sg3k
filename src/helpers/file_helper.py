@@ -3,6 +3,7 @@ import yaml
 
 from validators import Validator
 from utils import ErrorHandler
+from jinja2 import Template
 
 
 class FileHelper:
@@ -21,6 +22,12 @@ class FileHelper:
         template_dir = os.path.join(base_dir, '..', 'templates')
         path = os.path.join(template_dir, filename)
         return self.read_file(path, file_type='template')
+    
+    def load_and_render_template(self, template_name, **kwargs):
+        """Load and populate the HTML template."""
+        template_content = self.load_template(template_name)
+        template = Template(template_content)
+        return template.render(**kwargs)
 
     def load_thresholds(self, config_path):
         """Load and parse YAML thresholds config file."""

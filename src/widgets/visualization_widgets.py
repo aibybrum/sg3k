@@ -13,28 +13,20 @@ class VisualizationWidgets(WidgetHelper):
         self._landing_viz = landing_viz or LandingVisualizations(jump_df, config_manager)
         self._landing_service = landing_service or LandingService(jump_df, config_manager)
 
-    def _create_label(self, text):
-        """Helper to create a bold HTML label."""
-        return widgets.HTML(value=f"<b>{text}</b>")
-
-    def _create_description_tab(self, description_text):
-        """Helper to create the description tab."""
-        return widgets.VBox([widgets.HTML(value=description_text)])
-
-    def _create_settings_tab(self, selectors):
-        """Helper to create the settings tab."""
-        return widgets.VBox([widgets.HBox(selectors)])
-
     def _load_template(self, title, description, details):
         """Load and populate the HTML template."""
-        template = self._file_helper.load_template("visualization_template.html")
-        return template.render(title=title, description=description, details=details)
+        return self._file_helper.load_and_render_template(
+            "visualization_template.html",
+            title=title,
+            description=description,
+            details=details
+        )
 
     def _display_visualisation(self, title, description, details, interactive_plot, selectors):
         """Helper to display the visualization with tabs."""
         description_text = self._load_template(title, description, details)
-        description_tab = widgets.VBox([widgets.HTML(value=description_text)])
-        settings_tab = widgets.VBox([widgets.HBox(selectors)])
+        description_tab = self.create_description_tab(description_text)
+        settings_tab = self.create_settings_tab(selectors)
 
         tab = widgets.Tab()
         tab.children = [description_tab, settings_tab]
