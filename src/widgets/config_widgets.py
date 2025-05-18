@@ -4,6 +4,7 @@ from .widget_helper import WidgetHelper
 from .config_manager_handler import ConfigManagerHandler
 from .dataset_handler import DatasetHandler
 from helpers.file_helper import FileHelper
+from utils import ErrorHandler
 
 
 class ConfigWidgets(WidgetHelper):
@@ -30,6 +31,7 @@ class ConfigWidgets(WidgetHelper):
         self._initialize_ui()
         self._initialize_config_manager()
 
+    @ErrorHandler.log_exceptions
     def _initialize_ui(self):
         """Initialize the user interface."""
         self._display_alert_styles()
@@ -37,14 +39,11 @@ class ConfigWidgets(WidgetHelper):
         self._add_observers()
         self._create_tabs()
 
+    @ErrorHandler.log_exceptions
     def _initialize_config_manager(self):
         """Initialize the configuration manager."""
-        try:
-            self._config_manager_handler.create_config_manager(self._widgets)
-            self._config_manager_handler.validate_config_manager()
-        except Exception as e:
-            print(f"Error initializing config manager: {e}")
-            raise
+        self._config_manager_handler.create_config_manager(self._widgets)
+        self._config_manager_handler.validate_config_manager()
 
     def _display_alert_styles(self):
         """Display custom alert styles."""
@@ -79,7 +78,7 @@ class ConfigWidgets(WidgetHelper):
             accept='*.csv', multiple=False, layout=widgets.Layout(margin='10px 0 0 0px', width='100%', height='35px')
         )
         self._widgets['upload_message'] = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 0'))
-        self._widgets['error_message'] = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 15px'))
+        self._widgets['error_message'] = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 0'))
 
     def _add_observers(self):
         """Add observers to widgets."""
@@ -87,7 +86,6 @@ class ConfigWidgets(WidgetHelper):
         self._widgets['dynamic_dropzone_elevation'].observe(self._toggle_dropzone_elevation_visibility, names='value')
         self._widgets['dynamic_dropzone_elevation'].observe(self._on_file_upload, names='value')
         self._widgets['dropzone_elevation'].observe(self._on_file_upload, names='value')
-        #self._dropzone_elevation_widget.observe(self.create_dataset, names='value')
 
         self._widgets['point_after_initiation_visibility'].observe(self._toggle_point_after_initiation_visibility, names='value')
         self._widgets['pattern_elevations_base_visibility'].observe(self._toggle_pattern_elevations_base_visibility, names='value')
