@@ -1,20 +1,32 @@
-import tempfile
-import nbimporter
 import ipywidgets as widgets
-
-from utils import ConfigManager
-from helpers import WidgetHelper, FileHelper
-from validators import Validator
-from sg3k_dataset import DatasetService
 from IPython.display import display, HTML
+from .widget_helper import WidgetHelper
+from .config_manager_handler import ConfigManagerHandler
+from .dataset_handler import DatasetHandler
+from helpers.file_helper import FileHelper
 
 
 class ConfigWidgets(WidgetHelper):
-    def __init__(self, validator=None):
-        self._jump_df = None
-        self._config_manager = None
-        self._validator = validator or Validator()
+    DEFAULTS = {
+        'speed_metric': 'km/u',
+        'distance_metric': 'm',
+        'is_toggle_search': True,
+        'is_front_riser': False,
+        'point_after_initiation_visibility': False,
+        'point_after_initiation': 3,
+        'pattern_elevations_downwind': 1400,
+        'pattern_elevations_base_visibility': True,
+        'pattern_elevations_base': 1100,
+        'dynamic_dropzone_elevation': True,
+        'dropzone_elevation': None,
+    }
+
+    def __init__(self, defaults=None):
+        self._defaults = {**self.DEFAULTS, **(defaults or {})}
         self._file_helper = FileHelper()
+        self._config_manager_handler = ConfigManagerHandler()
+        self._dataset_handler = DatasetHandler()
+        self._widgets = {}
         self._initialize_ui()
         self._initialize_config_manager()
 
@@ -25,177 +37,139 @@ class ConfigWidgets(WidgetHelper):
         self._add_observers()
         self._create_tabs()
 
+    def _initialize_config_manager(self):
+        """Initialize the configuration manager."""
+        try:
+            self._config_manager_handler.create_config_manager(self._widgets)
+            self._config_manager_handler.validate_config_manager()
+        except Exception as e:
+            print(f"Error initializing config manager: {e}")
+            raise
+
     def _display_alert_styles(self):
-        """Display custom alert styles for success and error messages."""
+        """Display custom alert styles."""
         alert_styles_html = self._file_helper.load_template('alert_styles.html')
         display(HTML(alert_styles_html))
 
     def _create_widgets(self):
-        """Create and initialize all widgets."""
-        # Metric widgets
-        self._speed_metric_widget = self.create_dropdown(['km/u', 'mph'], 'km/u')
-        self._distance_metric_widget = self.create_dropdown(['m', 'ft'], 'm')
-
-        # Toggle widgets
-        self._is_toggle_search_widget = self.create_checkbox(True, description="Toggle Search:")
-        self._is_front_riser_widget = self.create_checkbox(False, description="Front Riser:", disabled=True)
-
-        # Point After Initiation widgets
-        self._point_after_initiation_visibility_widget = self.create_checkbox(
-            False, description="Show Point After Initiation"
+        """Create and initialize widgets."""
+        self._widgets['speed_metric'] = self.create_dropdown(['km/u', 'mph'], self._defaults['speed_metric'])
+        self._widgets['distance_metric'] = self.create_dropdown(['m', 'ft'], self._defaults['distance_metric'])
+        self._widgets['is_toggle_search'] = self.create_checkbox(self._defaults['is_toggle_search'], description="Toggle Search:")
+        self._widgets['is_front_riser'] = self.create_checkbox(self._defaults['is_front_riser'], description="Front Riser:", disabled=True)
+        self._widgets['point_after_initiation_visibility'] = self.create_checkbox(
+            self._defaults['point_after_initiation_visibility'], description="Show Point After Initiation"
         )
-        self._point_after_initiation_widget = self.create_float_text(3)
-        self._point_after_initiation_widget.layout.display = 'none'
-
-        # Pattern Elevations widgets
-        self._pattern_elevations_downwind_widget = self.create_int_text(1400)
-        self._pattern_elevations_base_visibility_widget = self.create_checkbox(
-            True, description="Show Base Elevation"
+        self._widgets['point_after_initiation'] = self.create_float_text(self._defaults['point_after_initiation'])
+        self._widgets['point_after_initiation'].layout.display = 'none'
+        self._widgets['pattern_elevations_downwind'] = self.create_int_text(self._defaults['pattern_elevations_downwind'])
+        self._widgets['pattern_elevations_base_visibility'] = self.create_checkbox(
+            self._defaults['pattern_elevations_base_visibility'], description="Show Base Elevation"
         )
-        self._pattern_elevations_base_widget = self.create_int_text(1100)
-
-        # Dropzone Elevation widgets
-        self._dynamic_dropzone_elevation_widget = self.create_checkbox(
-            True, description="Set Dynamically"
+        self._widgets['pattern_elevations_base'] = self.create_int_text(self._defaults['pattern_elevations_base'])
+        self._widgets['dynamic_dropzone_elevation'] = self.create_checkbox(
+            self._defaults['dynamic_dropzone_elevation'], description="Set Dynamically"
         )
-        self._dropzone_elevation_widget = self.create_float_text(None)
-        self._dropzone_elevation_widget.layout.display = 'none'
+        self._widgets['dropzone_elevation'] = self.create_float_text(self._defaults['dropzone_elevation'])
+        self._widgets['dropzone_elevation'].layout.display = 'none'
 
-        # File uploader
         uploader_label_html = self._file_helper.load_template('uploader_label.html')
-        self._uploader_label = self.create_html_label(uploader_label_html)
-        self._uploader = widgets.FileUpload(
+        self._widgets['uploader_label'] = self.create_html_label(uploader_label_html)
+        self._widgets['uploader'] = widgets.FileUpload(
             accept='*.csv', multiple=False, layout=widgets.Layout(margin='10px 0 0 0px', width='100%', height='35px')
         )
-        self._upload_message = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 0'))
-        self._error_message = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 15px'))
+        self._widgets['upload_message'] = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 0'))
+        self._widgets['error_message'] = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 15px'))
 
     def _add_observers(self):
         """Add observers to widgets."""
-        self._uploader.observe(self.create_dataset, names='value')
-        self._dynamic_dropzone_elevation_widget.observe(self.create_dataset, names='value')
-        self._dynamic_dropzone_elevation_widget.observe(self._toggle_dropzone_elevation_visibility, names='value')
-        self._dropzone_elevation_widget.observe(self.create_dataset, names='value')
+        self._widgets['uploader'].observe(self._on_file_upload, names='value')
+        self._widgets['dynamic_dropzone_elevation'].observe(self._toggle_dropzone_elevation_visibility, names='value')
+        self._widgets['dynamic_dropzone_elevation'].observe(self._on_file_upload, names='value')
+        self._widgets['dropzone_elevation'].observe(self._on_file_upload, names='value')
+        #self._dropzone_elevation_widget.observe(self.create_dataset, names='value')
 
-        self._point_after_initiation_visibility_widget.observe(self._toggle_point_after_initiation_visibility, names='value')
-        self._pattern_elevations_base_visibility_widget.observe(self._toggle_pattern_elevations_base_visibility, names='value')
+        self._widgets['point_after_initiation_visibility'].observe(self._toggle_point_after_initiation_visibility, names='value')
+        self._widgets['pattern_elevations_base_visibility'].observe(self._toggle_pattern_elevations_base_visibility, names='value')
 
         widgets_to_observe = [
-            self._speed_metric_widget,
-            self._distance_metric_widget,
-            self._is_toggle_search_widget,
-            self._is_front_riser_widget,
-            self._point_after_initiation_widget,
-            self._pattern_elevations_downwind_widget,
-            self._pattern_elevations_base_widget,
+            self._widgets['speed_metric'],
+            self._widgets['distance_metric'],
+            self._widgets['is_toggle_search'],
+            self._widgets['is_front_riser'],
+            self._widgets['point_after_initiation'],
+            self._widgets['pattern_elevations_downwind'],
+            self._widgets['pattern_elevations_base'],
         ]
         for widget in widgets_to_observe:
             widget.observe(self._update_config_manager, names='value')
 
     def _toggle_dropzone_elevation_visibility(self, change):
         """Toggle the visibility of the dropzone elevation widget."""
-        self._dropzone_elevation_widget.layout.display = 'none' if self._dynamic_dropzone_elevation_widget.value else ''
+        self._widgets['dropzone_elevation'].layout.display = 'none' if self._widgets['dynamic_dropzone_elevation'].value else ''
 
     def _toggle_point_after_initiation_visibility(self, change):
         """Toggle the visibility of the point after initiation widget."""
-        self._point_after_initiation_widget.layout.display = '' if self._point_after_initiation_visibility_widget.value else 'none'
+        self._widgets['point_after_initiation'].layout.display = '' if self._widgets['point_after_initiation_visibility'].value else 'none'
 
     def _toggle_pattern_elevations_base_visibility(self, change):
         """Toggle the visibility of the pattern elevations base widget."""
-        self._pattern_elevations_base_widget.layout.display = '' if self._pattern_elevations_base_visibility_widget.value else 'none'
+        self._widgets['pattern_elevations_base'].layout.display = '' if self._widgets['pattern_elevations_base_visibility'].value else 'none'
 
-    def create_dataset(self, change):
-        """Create a dataset from the uploaded file."""
-        dropzone_elevation = None if self._dynamic_dropzone_elevation_widget.value else self._dropzone_elevation_widget.value
-
-        if self._uploader.value:
-            try:
-                with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-                    tmp_file.write(self._uploader.value[0].content)
-                    tmp_file_path = tmp_file.name
-
-                dataset_service = DatasetService(track_file=tmp_file_path, sensor_file=None, dropzone_elevation=dropzone_elevation)
-                self._jump_df = dataset_service.create_jump_data()
-                self._upload_message.value = f'<div class="alert alert-success" role="alert">File uploaded and dataset {dataset_service.get_name()} created successfully.</div>'
-                self._validator.config_widgets.validate_jump_df(self)
-            except Exception as e:
-                self._upload_message.value = f'<div class="alert alert-danger" role="alert">Error processing file: {e}</div>'
-        else:
-            self._upload_message.value = '<div class="alert alert-danger" role="alert">Please upload a file.</div>'
-
-    def _initialize_config_manager(self):
-        """Initialize the configuration manager."""
-        self._config_manager = self._create_config_manager()
-        self._validate_config_manager()
-
-    def _create_config_manager(self):
-        """Create a configuration manager."""
-        point_after_initiation = self._point_after_initiation_widget.value if self._point_after_initiation_visibility_widget.value else None
-        pattern_elevations_base = self._pattern_elevations_base_widget.value if self._pattern_elevations_base_visibility_widget.value else None
-
+    def _on_file_upload(self, change):
+        """Handle file upload and dataset creation."""
         try:
-            config_manager = ConfigManager(
-                speed_metric=self._speed_metric_widget.value,
-                distance_metric=self._distance_metric_widget.value,
-                is_toggle_search=self._is_toggle_search_widget.value,
-                is_front_riser=self._is_front_riser_widget.value,
-                point_after_initiation=point_after_initiation,
-                pattern_elevations={
-                    'downwind': self._pattern_elevations_downwind_widget.value,
-                    'base': pattern_elevations_base
-                }
+            dropzone_elevation = None if self._widgets['dynamic_dropzone_elevation'].value else self._widgets['dropzone_elevation'].value
+            self._dataset_handler.create_dataset(self._widgets['uploader'], dropzone_elevation)
+            dataset_name = self._dataset_handler.get_dataset_name()
+            self._widgets['upload_message'].value = (
+                f'<div class="alert alert-success" role="alert">'
+                f'Dataset "{dataset_name}" created successfully.</div>'
             )
-            self._error_message.value = ''
-        except ValueError as e:
-            self._error_message.value = f'<div class="alert alert-danger" role="alert">{e}</div>'
-
-        return config_manager
+        except Exception as e:
+            self._widgets['upload_message'].value = (
+                f'<div class="alert alert-danger" role="alert">Error: {e}</div>'
+            )
 
     def _update_config_manager(self, change):
         """Update the configuration manager."""
-        self._config_manager = self._create_config_manager()
-        self._validate_config_manager()
-
-    def _validate_config_manager(self):
-        """Validate the configuration manager."""
         try:
-            self._validator.config_widgets.validate_config_manager(self)
+            self._config_manager_handler.create_config_manager(self._widgets)
+            self._config_manager_handler.validate_config_manager()
+            self._widgets['error_message'].value = ''
         except Exception as e:
-            self._error_message.value = f'<div class="alert alert-danger" role="alert">{e}</div>'
+            self._widgets['error_message'].value = f'<div class="alert alert-danger" role="alert">{e}</div>'
 
     def _create_tabs(self):
-        """Create and display the configuration tabs."""
+        """Create and display tabs."""
         file_upload_column = widgets.VBox([
-            self._uploader_label,
-            self._uploader,
-            self._upload_message
+            self._widgets['uploader_label'],
+            self._widgets['uploader'],
+            self._widgets['upload_message']
         ], layout=widgets.Layout(width='25%'))
 
         settings_columns = widgets.HBox([
             widgets.VBox([
-                self.create_labeled_widget("Dropzone Elevation:", self._dynamic_dropzone_elevation_widget),
-                self._dropzone_elevation_widget,
-                self.create_labeled_widget("Speed Metric:", self._speed_metric_widget),
-                self.create_labeled_widget("Distance Metric:", self._distance_metric_widget)
+                self.create_labeled_widget("Dropzone Elevation:", self._widgets['dynamic_dropzone_elevation']),
+                self._widgets['dropzone_elevation'],
+                self.create_labeled_widget("Speed Metric:", self._widgets['speed_metric']),
+                self.create_labeled_widget("Distance Metric:", self._widgets['distance_metric'])
             ]),
             widgets.VBox([
-                self.create_labeled_widget("Point After Initiation:", self._point_after_initiation_visibility_widget),
-                self._point_after_initiation_widget,
-                self.create_labeled_widget("Downwind Elevation:", self._pattern_elevations_downwind_widget),
-                self.create_labeled_widget("Base Elevation:", self._pattern_elevations_base_visibility_widget),
-                self._pattern_elevations_base_widget
+                self.create_labeled_widget("Point After Initiation:", self._widgets['point_after_initiation_visibility']),
+                self._widgets['point_after_initiation'],
+                self.create_labeled_widget("Downwind Elevation:", self._widgets['pattern_elevations_downwind']),
+                self.create_labeled_widget("Base Elevation:", self._widgets['pattern_elevations_base_visibility']),
+                self._widgets['pattern_elevations_base']
             ], layout=widgets.Layout(margin='0 0 0 15px')),
             widgets.VBox([
-                self.create_labeled_widget("Toggle Search:", self._is_toggle_search_widget),
-                self.create_labeled_widget("Front Riser:", self._is_front_riser_widget),
-                self._error_message
+                self.create_labeled_widget("Toggle Search:", self._widgets['is_toggle_search']),
+                self.create_labeled_widget("Front Riser:", self._widgets['is_front_riser']),
+                self._widgets['error_message']
             ], layout=widgets.Layout(margin='0 0 0 15px'))
         ], layout=widgets.Layout(width='75%', margin='0 0 0 25px'))
 
-        config_widgets = widgets.HBox([
-            file_upload_column,
-            settings_columns
-        ], layout=widgets.Layout(width='100%', justify_content='flex-start'))
+        config_widgets = widgets.HBox([file_upload_column, settings_columns], layout=widgets.Layout(width='100%', justify_content='flex-start'))
 
         description_html = self._file_helper.load_template('config_description.html')
         description_text = widgets.HTML(value=description_html)
@@ -209,15 +183,8 @@ class ConfigWidgets(WidgetHelper):
 
     @property
     def config_manager(self):
-        """Get the configuration manager."""
-        return self._config_manager
+        return self._config_manager_handler.config_manager
 
     @property
     def jump_df(self):
-        """Get the jump data frame."""
-        return self._jump_df
-
-    @property
-    def uploader(self):
-        """Get the file uploader widget."""
-        return self._uploader
+        return self._dataset_handler.jump_df
