@@ -13,3 +13,11 @@ class ConfigWidgetsValidator:
         """Validate that config_manager is not None."""
         if config_widgets.config_manager is None:
             ErrorHandler.log_and_raise_error(ValueError, "Configuration manager (config_manager) is not set.")
+
+    @staticmethod
+    def validate_ready_for_visualization(config_widgets):
+        """Validate that both jump_df and config_manager are not None."""
+        if config_widgets.jump_df is None or config_widgets.config_manager is None:
+            ErrorHandler.log_and_raise_error(
+                ValueError, "Both jump_df and config_manager must be set for visualization."
+            )
