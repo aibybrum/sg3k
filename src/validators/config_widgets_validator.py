@@ -21,3 +21,9 @@ class ConfigWidgetsValidator:
             ErrorHandler.log_and_raise_error(
                 ValueError, "Both jump_df and config_manager must be set for visualization."
             )
+
+    @staticmethod
+    def validate_config_manager_handler(config_manager_handler):
+        """Validate that the configuration manager in the handler is not None."""
+        if not config_manager_handler.config_manager:
+            ErrorHandler.log_and_raise_error(ValueError, "Configuration manager is not set.")
