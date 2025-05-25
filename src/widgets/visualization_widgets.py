@@ -28,27 +28,27 @@ class VisualizationWidgets(WidgetHelper):
             details=details
         )
 
-    def _display_visualization(self, title, description, details, interactive_plot, selectors):
+    def _render_visualization(self, title, description, details, interactive_plot, selectors):
         """Helper to display the visualization with tabs."""
         description_text = self._load_template(title, description, details)
         description_tab = self.create_html_label(description_text)
         settings_tab = widgets.VBox([widgets.HBox(selectors)])
-        tab = self.create_tab(description_tab, settings_tab, tab_titles=["Description", "Settings"])
+        tab = self.create_tab(settings_tab, description_tab, tab_titles=["Settings", "Description"])
         display(tab, interactive_plot)
 
-    def _create_visualization(self, title, description, details, update_plot_func, selectors):
+    def _init_visualization(self, title, description, details, update_plot_func, selectors):
         """Generic method to create and display a visualization."""
         interactive_plot = widgets.interactive_output(update_plot_func, selectors)
         selector_boxes = self.create_selector_boxes(selectors)
-        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
+        self._render_visualization(title, description, details, interactive_plot, selector_boxes)
 
-    def _setup_visualization(self, config_key, update_plot_func, selectors):
+    def _display_visualization(self, config_key, update_plot_func, selectors):
         """Centralized method to set up and display a visualization."""
         config = self._get_visualization_config(config_key)
         title = config.get("title", config_key.replace("_", " ").title())
         description = config.get("description", "")
         details = config.get("details", [])
-        self._create_visualization(title, description, details, update_plot_func, selectors)
+        self._init_visualization(title, description, details, update_plot_func, selectors)
 
     @ErrorHandler.log_exceptions
     def exit_overview(self):
@@ -61,7 +61,7 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._exit_viz.plt_overview(list(parameters), x_axis)
             display(fig)
 
-        self._setup_visualization("exit_overview", update_plot, {
+        self._display_visualization("exit_overview", update_plot, {
             "parameters": parameter_selector,
             "x_axis": x_axis_selector
         })
@@ -79,7 +79,7 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_overview(list(parameters), x_axis, list(key_events))
             display(fig)
 
-        self._setup_visualization("landing_overview", update_plot, {
+        self._display_visualization("landing_overview", update_plot, {
             "parameters": parameter_selector,
             "key_events": key_events_selector,
             "x_axis": x_axis_selector
@@ -95,7 +95,7 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_speed(x_axis)
             display(fig)
 
-        self._setup_visualization("horizontal_speed", update_plot, {"x_axis": x_axis_selector})
+        self._display_visualization("horizontal_speed", update_plot, {"x_axis": x_axis_selector})
 
     @ErrorHandler.log_exceptions
     def side_view(self):
@@ -111,7 +111,7 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_side_view(x_axis, list(key_events))
             display(fig)
 
-        self._setup_visualization("side_view", update_plot, {
+        self._display_visualization("side_view", update_plot, {
             "key_events": key_events_selector,
             "x_axis": x_axis_selector
         })
@@ -129,7 +129,7 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_overhead(list(key_events))
             display(fig)
 
-        self._setup_visualization("overhead_view", update_plot, {"key_events": key_events_selector})
+        self._display_visualization("overhead_view", update_plot, {"key_events": key_events_selector})
 
     @ErrorHandler.log_exceptions
     def map_2d(self):
@@ -144,7 +144,7 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_2d_map(list(key_events))
             display(fig)
 
-        self._setup_visualization("map_2d", update_plot, {"key_events": key_events_selector})
+        self._display_visualization("map_2d", update_plot, {"key_events": key_events_selector})
 
     @ErrorHandler.log_exceptions
     def map_3d(self):
@@ -157,4 +157,4 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_3d_map(list(key_events))
             display(fig)
 
-        self._setup_visualization("map_3d", update_plot, {"key_events": key_events_selector})
+        self._display_visualization("map_3d", update_plot, {"key_events": key_events_selector})
