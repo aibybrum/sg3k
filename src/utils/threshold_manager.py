@@ -17,7 +17,7 @@ class ThresholdManager:
 
     def _load_thresholds(self):
         """Load thresholds from the configuration file."""
-        config = self._file_helper.load_thresholds(self._config_path)
+        config = self._file_helper.load_yaml(self._config_path)
         thresholds = {}
         for category, items in config.items():
             thresholds[category] = {

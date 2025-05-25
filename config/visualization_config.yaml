@@ -1,0 +1,65 @@
+visualizations:
+  exit_overview:
+    title: "Exit Overview"
+    description: "This visualization provides an overview of data from a skydive, starting when the jumper exited the plane."
+    details:
+      - label: "Metrics"
+        content: "Elevation, horizontal speed, vertical speed, dive angle, and glide ratio."
+      - label: "X-axis"
+        content: "Options include Horizontal distance, Time, and Distance."
+  landing_overview:
+    title: "Landing Overview"
+    description: "This visualization offers a comprehensive overview of your skydive swoop landing, providing valuable insights into your maneuver."
+    details:
+      - label: "Metrics"
+        content: "Elevation, horizontal speed, vertical speed, dive angle, and glide ratio."
+      - label: "Events Indicators"
+        content: "Vertical lines provide additional information about certain events."
+  horizontal_speed:
+    title: "Horizontal Speed"
+    description: "Understand the dynamics of your skydive swoop landing with our horizontal speed plot."
+    details:
+      - label: "Speed Profile"
+        content: "The plot illustrates your horizontal speed, showing velocity changes."
+      - label: "Performance Insights"
+        content: "Analyze speed variations to identify areas for improvement."
+  side_view:
+    title: "Side View Of Flight Path"
+    description: "Examine the nuances of your skydive swoop landing with our side view plot visualization."
+    details:
+      - label: "Flight Path Profile"
+        content: "A profile view of your flight path, offering a clear observation of the landing’s rollout."
+      - label: "Rollout Details"
+        content: "This perspective reveals the steepness of your descent and your proximity to the gate during the approach."
+      - label: "Maneuver Altitude"
+        content: "Gain insight into the altitude at which you initiated your maneuver, providing valuable information for performance analysis."
+      - label: "Event Markers"
+        content: "Key events are marked along your flight path."
+  overhead_view:
+    title: "Overhead View Of Flight Path"
+    description: "Gain a unique perspective on your skydive swoop landing with our normal plot visualization. Here’s what you’re seeing:"
+    details:
+      - label: "Flight Trajectory"
+        content: "Your flight path is plotted, giving you a bird’s-eye view of your skydive."
+      - label: "Event Markers"
+        content: "Key events are marked along your flight path."
+  map_2d:
+    title: "2D Map"
+    description: "Explore the intricacies of your skydive swoop landing with our detailed 2D map visualization. Here’s what you’re looking at:"
+    details:
+      - label: "Flight Path"
+        content: "Your flight trajectory is clearly marked on the map, giving you a top-down view of your skydive."
+      - label: "Event Markers"
+        content: "Key events are marked along your flight path."
+  map_3d:
+    title: "3D Map"
+    description: "Dive into the details of your skydive swoop landing with our immersive 3D map visualization. Here’s what you’re seeing:"
+    details:
+      - label: "Flight Path"
+        content: "Your flight trajectory is vividly overlaid on high-resolution satellite imagery, providing a real-world context to your skydive."
+      - label: "Altitude Representation"
+        content: "The altitude changes during your swoop are represented in 3D, giving you a clear view of your descent and landing approach."
+      - label: "Interactive Exploration"
+        content: "Rotate, zoom, and pan the map to explore your flight from different angles and perspectives."
+      - label: "Event Markers"
+        content: "Key events are marked along your flight path."

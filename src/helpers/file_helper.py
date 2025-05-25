@@ -39,7 +39,7 @@ class FileHelper:
             ErrorHandler.log_and_raise_error(ValueError, f"Error rendering template '{template_name}': {e}")
 
     @ErrorHandler.log_exceptions
-    def load_thresholds(self, config_path):
+    def load_yaml(self, config_path):
         """Load and parse YAML thresholds config file."""
         content = self.read_file(config_path, file_type='config file')
         try:
