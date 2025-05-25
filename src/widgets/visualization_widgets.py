@@ -1,6 +1,7 @@
 import ipywidgets as widgets
 
 from helpers import *
+from utils import ErrorHandler
 from .widget_helper import WidgetHelper
 from IPython.display import display
 from sg3k_swoop import *
@@ -36,6 +37,7 @@ class VisualizationWidgets(WidgetHelper):
         selector_boxes = self.create_selector_boxes(selectors)
         self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
+    @ErrorHandler.log_exceptions
     def exit_overview(self):
         """Display the exit overview visualization."""
         parameter_options = ['Elevation', 'Vertical speed', 'Glide ratio', 'Horizontal speed', 'Dive angle']
@@ -57,6 +59,7 @@ class VisualizationWidgets(WidgetHelper):
             "x_axis": x_axis_selector
         })
 
+    @ErrorHandler.log_exceptions
     def landing_overview(self):
         """Display the landing overview visualization."""
         parameter_options = ['Elevation', 'Vertical speed', 'Glide ratio', 'Horizontal speed', 'Dive angle']
@@ -84,6 +87,7 @@ class VisualizationWidgets(WidgetHelper):
             "x_axis": x_axis_selector
         })
 
+    @ErrorHandler.log_exceptions
     def horizontal_speed(self):
         """Display the horizontal speed visualization."""
         x_axis_selector = self.create_dropdown(['Horizontal distance', 'Time', 'Distance'], 'Horizontal distance')
@@ -102,6 +106,7 @@ class VisualizationWidgets(WidgetHelper):
         ]
         self._create_visualization(title, description, details, update_plot, {"x_axis": x_axis_selector})
 
+    @ErrorHandler.log_exceptions
     def side_view(self):
         """Display the side view visualization."""
         key_events = self._landing_service.get_filtered_key_events(
@@ -129,6 +134,7 @@ class VisualizationWidgets(WidgetHelper):
             "x_axis": x_axis_selector
         })
 
+    @ErrorHandler.log_exceptions
     def overhead_view(self):
         """Display the overhead view visualization."""
         key_events = self._landing_service.get_filtered_key_events(
@@ -148,6 +154,7 @@ class VisualizationWidgets(WidgetHelper):
         ]
         self._create_visualization(title, description, details, update_plot, {"key_events": key_events_selector})
 
+    @ErrorHandler.log_exceptions
     def map_2d(self):
         """Display the 2D map visualization."""
         key_events = self._landing_service.get_filtered_key_events(
@@ -167,6 +174,7 @@ class VisualizationWidgets(WidgetHelper):
         ]
         self._create_visualization(title, description, details, update_plot, {"key_events": key_events_selector})
 
+    @ErrorHandler.log_exceptions
     def map_3d(self):
         """Display the 3D map visualization."""
         key_events = tuple(self._landing_service.get_key_events()['landing'].keys())
