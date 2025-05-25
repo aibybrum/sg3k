@@ -22,11 +22,11 @@ class ConfigWidgets(WidgetHelper):
         'dropzone_elevation': None,
     }
 
-    def __init__(self, defaults=None):
+    def __init__(self, defaults=None, file_helper=None, config_manager=None, dataset_handler=None):
         self._defaults = {**self.DEFAULTS, **(defaults or {})}
-        self._file_helper = FileHelper()
-        self._config_manager_handler = ConfigManagerHandler()
-        self._dataset_handler = DatasetHandler()
+        self._file_helper = file_helper or FileHelper()
+        self._config_manager_handler = config_manager or ConfigManagerHandler()
+        self._dataset_handler = dataset_handler or DatasetHandler()
         self._widgets = {}
         self._initialize_ui()
         self._initialize_config_manager()
