@@ -25,6 +25,15 @@ class WidgetHelper:
             [label_widget, widget],
             layout=widgets.Layout(margin=margin)
         )
+    
+    @ErrorHandler.log_exceptions
+    def create_selector_boxes(self, selectors):
+        """Create labeled widgets for the given selectors."""
+        boxes = []
+        for idx, (label, widget) in enumerate(selectors.items()):
+            margin = "0 0 0 10px" if idx > 0 else None
+            boxes.append(self.create_labeled_widget(label, widget, margin=margin))
+        return boxes
 
     @ErrorHandler.log_exceptions
     def create_tab(self, *tab_contents, tab_titles=None):
