@@ -29,7 +29,13 @@ class VisualizationWidgets(WidgetHelper):
         settings_tab = widgets.VBox([widgets.HBox(selectors)])
         tab = self.create_tab(description_tab, settings_tab, tab_titles=["Description", "Settings"])
         display(tab, interactive_plot)
-    
+
+    def _create_visualization(self, title, description, details, update_plot_func, selectors):
+        """Generic method to create and display a visualization."""
+        interactive_plot = widgets.interactive_output(update_plot_func, selectors)
+        selector_boxes = self.create_selector_boxes(selectors)
+        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
+
     def exit_overview(self):
         """Display the exit overview visualization."""
         parameter_options = ['Elevation', 'Vertical speed', 'Glide ratio', 'Horizontal speed', 'Dive angle']
@@ -40,19 +46,16 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._exit_viz.plt_overview(list(parameters), x_axis)
             display(fig)
 
-        interactive_plot = widgets.interactive_output(update_plot, {'parameters': parameter_selector, 'x_axis': x_axis_selector})
-
         title = "Exit Overview"
         description = "This visualization provides an overview of data from a skydive, starting when the jumper exited the plane."
         details = [
             {"label": "Metrics", "content": "Elevation, horizontal speed, vertical speed, dive angle, and glide ratio."},
             {"label": "X-axis", "content": "Options include Horizontal distance, Time, and Distance."}
         ]
-        selector_boxes = self.create_selector_boxes({
-            "Parameters": parameter_selector, 
-            "X-axis": x_axis_selector
+        self._create_visualization(title, description, details, update_plot, {
+            "parameters": parameter_selector,
+            "x_axis": x_axis_selector
         })
-        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def landing_overview(self):
         """Display the landing overview visualization."""
@@ -66,12 +69,6 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_overview(list(parameters), x_axis, list(key_events))
             display(fig)
 
-        interactive_plot = widgets.interactive_output(update_plot, {
-            'parameters': parameter_selector,
-            'x_axis': x_axis_selector,
-            'key_events': key_events_selector
-        })
-
         title = "Landing Overview"
         description = (
             "This visualization offers a comprehensive overview of your skydive swoop landing, "
@@ -81,12 +78,11 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Metrics", "content": "Elevation, horizontal speed, vertical speed, dive angle, and glide ratio."},
             {"label": "Events Indicators", "content": "Vertical lines provide additional information about certain events."}
         ]
-        selector_boxes = self.create_selector_boxes({
-            "Parameters": parameter_selector, 
-            "Key Events": key_events_selector, 
-            "X-axis": x_axis_selector
+        self._create_visualization(title, description, details, update_plot, {
+            "parameters": parameter_selector,
+            "key_events": key_events_selector,
+            "x_axis": x_axis_selector
         })
-        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def horizontal_speed(self):
         """Display the horizontal speed visualization."""
@@ -96,8 +92,6 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_speed(x_axis)
             display(fig)
 
-        interactive_plot = widgets.interactive_output(update_plot, {'x_axis': x_axis_selector})
-
         title = "Horizontal Speed"
         description = (
             "Understand the dynamics of your skydive swoop landing with our horizontal speed plot."
@@ -106,15 +100,13 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Speed Profile", "content": "The plot illustrates your horizontal speed, showing velocity changes."},
             {"label": "Performance Insights", "content": "Analyze speed variations to identify areas for improvement."}
         ]
-        selector_boxes = self.create_selector_boxes({"X-axis": x_axis_selector})
-        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
+        self._create_visualization(title, description, details, update_plot, {"x_axis": x_axis_selector})
 
     def side_view(self):
         """Display the side view visualization."""
         key_events = self._landing_service.get_filtered_key_events(
             EventMarkerHelper.get_event_keys_side_view().keys(), event_type='landing'
         )
-
         key_events_selector = self.create_select_multiple(key_events, key_events)
         x_axis_selector = self.create_dropdown(['Horizontal distance', 'Time', 'Distance'], 'Horizontal distance')
 
@@ -122,14 +114,9 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_side_view(x_axis, list(key_events))
             display(fig)
 
-        interactive_plot = widgets.interactive_output(update_plot, {
-            'x_axis': x_axis_selector,
-            'key_events': key_events_selector
-        })
-
         title = "Side View Of Flight Path"
         description = (
-            "Examine the nuances of your skydive swoop landing with our side view plot visualization. Here’s what you’re looking at:"
+            "Examine the nuances of your skydive swoop landing with our side view plot visualization."
         )
         details = [
             {"label": "Flight Path Profile", "content": "A profile view of your flight path, offering a clear observation of the landing’s rollout."},
@@ -137,11 +124,10 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Maneuver Altitude", "content": "Gain insight into the altitude at which you initiated your maneuver, providing valuable information for performance analysis."},
             {"label": "Event Markers", "content": "Key events are marked along your flight path."}
         ]
-        selector_boxes = self.create_selector_boxes({
-            "Key Events": key_events_selector, 
-            "X-axis": x_axis_selector
+        self._create_visualization(title, description, details, update_plot, {
+            "key_events": key_events_selector,
+            "x_axis": x_axis_selector
         })
-        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def overhead_view(self):
         """Display the overhead view visualization."""
@@ -154,16 +140,13 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_overhead(list(key_events))
             display(fig)
 
-        interactive_plot = widgets.interactive_output(update_plot, {'key_events': key_events_selector})
-
         title = "Overhead View Of Flight Path"
         description = ("Gain a unique perspective on your skydive swoop landing with our normal plot visualization. Here’s what you’re seeing:")
         details = [
             {"label": "Flight Trajectory", "content": "Your flight path is plotted, giving you a bird’s-eye view of your skydive."},
             {"label": "Event Markers", "content": "Key events are marked along your flight path."}
         ]
-        selector_boxes = self.create_selector_boxes({"Key Events": key_events_selector})
-        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
+        self._create_visualization(title, description, details, update_plot, {"key_events": key_events_selector})
 
     def map_2d(self):
         """Display the 2D map visualization."""
@@ -176,16 +159,13 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_2d_map(list(key_events))
             display(fig)
 
-        interactive_plot = widgets.interactive_output(update_plot, {'key_events': key_events_selector})
-
         title = "2D Map"
         description = ("Explore the intricacies of your skydive swoop landing with our detailed 2D map visualization. Here’s what you’re looking at:")
         details = [
             {"label": "Flight Path", "content": "Your flight trajectory is clearly marked on the map, giving you a top-down view of your skydive."},
             {"label": "Event Markers", "content": "Key events are marked along your flight path."}
         ]
-        selector_boxes = self.create_selector_boxes({"Key Events": key_events_selector})
-        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
+        self._create_visualization(title, description, details, update_plot, {"key_events": key_events_selector})
 
     def map_3d(self):
         """Display the 3D map visualization."""
@@ -196,8 +176,6 @@ class VisualizationWidgets(WidgetHelper):
             fig = self._landing_viz.plt_3d_map(list(key_events))
             display(fig)
 
-        interactive_plot = widgets.interactive_output(update_plot, {'key_events': key_events_selector})
-
         title = "3D Map"
         description = ("Dive into the details of your skydive swoop landing with our immersive 3D map visualization. Here’s what you’re seeing:")
         details = [
@@ -206,5 +184,4 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Interactive Exploration", "content": "Rotate, zoom, and pan the map to explore your flight from different angles and perspectives."},
             {"label": "Event Markers", "content": "Key events are marked along your flight path."}
         ]
-        selector_boxes = self.create_selector_boxes({"Key Events": key_events_selector})
-        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
+        self._create_visualization(title, description, details, update_plot, {"key_events": key_events_selector})
