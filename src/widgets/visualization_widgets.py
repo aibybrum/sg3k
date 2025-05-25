@@ -9,7 +9,6 @@ from sg3k_swoop import *
 class VisualizationWidgets(WidgetHelper):
     def __init__(self, jump_df, config_manager, exit_viz=None, landing_viz=None, landing_service=None):
         self._file_helper = FileHelper()
-
         self._exit_viz = exit_viz or ExitVisualizations(jump_df, config_manager)
         self._landing_viz = landing_viz or LandingVisualizations(jump_df, config_manager)
         self._landing_service = landing_service or LandingService(jump_df, config_manager)

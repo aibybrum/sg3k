@@ -52,33 +52,42 @@ class ConfigWidgets(WidgetHelper):
 
     def _create_widgets(self):
         """Create and initialize widgets."""
+        # Dropdowns
         self._widgets['speed_metric'] = self.create_dropdown(['km/u', 'mph'], self._defaults['speed_metric'])
         self._widgets['distance_metric'] = self.create_dropdown(['m', 'ft'], self._defaults['distance_metric'])
+
+        # Checkboxes
         self._widgets['is_toggle_search'] = self.create_checkbox(self._defaults['is_toggle_search'], description="Toggle Search:")
         self._widgets['is_front_riser'] = self.create_checkbox(self._defaults['is_front_riser'], description="Front Riser:", disabled=True)
         self._widgets['point_after_initiation_visibility'] = self.create_checkbox(
             self._defaults['point_after_initiation_visibility'], description="Show Point After Initiation"
         )
-        self._widgets['point_after_initiation'] = self.create_float_text(self._defaults['point_after_initiation'])
-        self._widgets['point_after_initiation'].layout.display = 'none'
-        self._widgets['pattern_elevations_downwind'] = self.create_int_text(self._defaults['pattern_elevations_downwind'])
         self._widgets['pattern_elevations_base_visibility'] = self.create_checkbox(
             self._defaults['pattern_elevations_base_visibility'], description="Show Base Elevation"
         )
-        self._widgets['pattern_elevations_base'] = self.create_int_text(self._defaults['pattern_elevations_base'])
         self._widgets['dynamic_dropzone_elevation'] = self.create_checkbox(
             self._defaults['dynamic_dropzone_elevation'], description="Set Dynamically"
         )
+
+        # Float and Int Text Inputs
+        self._widgets['point_after_initiation'] = self.create_float_text(self._defaults['point_after_initiation'])
+        self._widgets['point_after_initiation'].layout.display = 'none'
+        self._widgets['pattern_elevations_downwind'] = self.create_int_text(self._defaults['pattern_elevations_downwind'])
+        self._widgets['pattern_elevations_base'] = self.create_int_text(self._defaults['pattern_elevations_base'])
         self._widgets['dropzone_elevation'] = self.create_float_text(self._defaults['dropzone_elevation'])
         self._widgets['dropzone_elevation'].layout.display = 'none'
 
+        # File Upload Widgets
         uploader_label_html = self._file_helper.load_template('uploader_label.html')
         self._widgets['uploader_label'] = self.create_html_label(uploader_label_html)
-        self._widgets['uploader'] = widgets.FileUpload(
-            accept='*.csv', multiple=False, layout=widgets.Layout(margin='10px 0 0 0px', width='100%', height='35px')
+        self._widgets['uploader'] = self.create_widget(
+            widgets.FileUpload,
+            accept='*.csv',
+            multiple=False,
+            layout=widgets.Layout(margin='10px 0 0 0px', width='100%', height='35px')
         )
-        self._widgets['upload_message'] = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 0'))
-        self._widgets['error_message'] = widgets.HTML(layout=widgets.Layout(margin='10px 0 0 0'))
+        self._widgets['upload_message'] = self.create_html_label("", bold=False, margin='10px 0 0 0')
+        self._widgets['error_message'] = self.create_html_label("", bold=False, margin='10px 0 0 0')
 
     def _add_observers(self):
         """Add observers to widgets."""
@@ -152,19 +161,19 @@ class ConfigWidgets(WidgetHelper):
                 self._widgets['dropzone_elevation'],
                 self.create_labeled_widget("Speed Metric:", self._widgets['speed_metric']),
                 self.create_labeled_widget("Distance Metric:", self._widgets['distance_metric'])
-            ]),
+            ],layout=widgets.Layout(margin='10px 0 0 0')),
             widgets.VBox([
                 self.create_labeled_widget("Point After Initiation:", self._widgets['point_after_initiation_visibility']),
                 self._widgets['point_after_initiation'],
                 self.create_labeled_widget("Downwind Elevation:", self._widgets['pattern_elevations_downwind']),
                 self.create_labeled_widget("Base Elevation:", self._widgets['pattern_elevations_base_visibility']),
                 self._widgets['pattern_elevations_base']
-            ], layout=widgets.Layout(margin='0 0 0 15px')),
+            ], layout=widgets.Layout(margin='10px 0 0 15px')),
             widgets.VBox([
                 self.create_labeled_widget("Toggle Search:", self._widgets['is_toggle_search']),
                 self.create_labeled_widget("Front Riser:", self._widgets['is_front_riser']),
                 self._widgets['error_message']
-            ], layout=widgets.Layout(margin='0 0 0 15px'))
+            ], layout=widgets.Layout(margin='10px 0 0 15px'))
         ], layout=widgets.Layout(width='75%', margin='0 0 0 25px'))
 
         config_widgets = widgets.HBox([file_upload_column, settings_columns], layout=widgets.Layout(width='100%', justify_content='flex-start'))
@@ -172,8 +181,7 @@ class ConfigWidgets(WidgetHelper):
         description_html = self._file_helper.load_template('config_description.html')
         description_text = widgets.HTML(value=description_html)
 
-        tab = widgets.Tab()
-        tab.children = [config_widgets, widgets.VBox([description_text])]
+        tab = self.create_tab(config_widgets, description_text)
         tab.set_title(0, 'Configuration')
         tab.set_title(1, 'Description')
 
