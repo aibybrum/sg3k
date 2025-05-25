@@ -86,8 +86,8 @@ class ConfigWidgets(WidgetHelper):
             multiple=False,
             layout=widgets.Layout(margin='10px 0 0 0px', width='100%', height='35px')
         )
-        self._widgets['upload_message'] = self.create_html_label("", bold=False, margin='10px 0 0 0')
-        self._widgets['error_message'] = self.create_html_label("", bold=False, margin='10px 0 0 0')
+        self._widgets['upload_message'] = self.create_html_label("", bold=False, margin='15px 0 0 0')
+        self._widgets['error_message'] = self.create_html_label("", bold=False, margin='15px 0 0 0')
 
     def _add_observers(self):
         """Add observers to widgets."""

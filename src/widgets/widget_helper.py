@@ -15,12 +15,14 @@ class WidgetHelper:
     def create_widget(self, widget_type, **kwargs):
         """Generic method to create a widget of the specified type."""
         return widget_type(**kwargs)
-
+    
     @ErrorHandler.log_exceptions
-    def create_labeled_widget(self, label, widget, margin='0'):
-        """Create a labeled widget with customizable margins."""
-        return widgets.VBox(
-            [self.create_html_label(label, bold=True), widget],
+    def create_labeled_widget(self, label, widget, margin='0', layout_type='VBox'):
+        """Create a labeled widget with customizable margins and layout type."""
+        label_widget = self.create_html_label(label, bold=True)
+        layout_class = widgets.VBox if layout_type == 'VBox' else widgets.HBox
+        return layout_class(
+            [label_widget, widget],
             layout=widgets.Layout(margin=margin)
         )
 
