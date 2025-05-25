@@ -53,9 +53,9 @@ class VisualizationWidgets(WidgetHelper):
     @ErrorHandler.log_exceptions
     def exit_overview(self):
         """Display the exit overview visualization."""
-        parameter_options = ['Elevation', 'Vertical speed', 'Glide ratio', 'Horizontal speed', 'Dive angle']
-        parameter_selector = self.create_select_multiple(parameter_options, ['Elevation', 'Vertical speed'])
-        x_axis_selector = self.create_dropdown(['Horizontal distance', 'Time', 'Distance'], 'Horizontal distance')
+        config = self._get_visualization_config("exit_overview")
+        parameter_selector = self.create_select_multiple(config.get("parameter_options", []), config.get("parameter_default_options", []))
+        x_axis_selector = self.create_dropdown(config.get("x_axis_options", []), config.get("x_axis_options", [])[0])
 
         def update_plot(parameters, x_axis):
             fig = self._exit_viz.plt_overview(list(parameters), x_axis)
@@ -69,11 +69,11 @@ class VisualizationWidgets(WidgetHelper):
     @ErrorHandler.log_exceptions
     def landing_overview(self):
         """Display the landing overview visualization."""
-        parameter_options = ['Elevation', 'Vertical speed', 'Glide ratio', 'Horizontal speed', 'Dive angle']
-        parameter_selector = self.create_select_multiple(parameter_options, parameter_options)
-        key_events = tuple(self._landing_service.get_key_events()['landing'].keys())
+        config = self._get_visualization_config("landing_overview")
+        parameter_selector = self.create_select_multiple(config.get("parameter_options", []), config.get("parameter_default_options", []))
+        key_events = tuple(self._landing_service.get_key_events()[config.get("key_event_type", "")].keys())
         key_events_selector = self.create_select_multiple(key_events, key_events)
-        x_axis_selector = self.create_dropdown(['Horizontal distance', 'Time', 'Distance'], 'Horizontal distance')
+        x_axis_selector = self.create_dropdown(config.get("x_axis_options", []), config.get("x_axis_options", [])[0])
 
         def update_plot(parameters, x_axis, key_events):
             fig = self._landing_viz.plt_overview(list(parameters), x_axis, list(key_events))
@@ -88,7 +88,8 @@ class VisualizationWidgets(WidgetHelper):
     @ErrorHandler.log_exceptions
     def horizontal_speed(self):
         """Display the horizontal speed visualization."""
-        x_axis_selector = self.create_dropdown(['Horizontal distance', 'Time', 'Distance'], 'Horizontal distance')
+        config = self._get_visualization_config("horizontal_speed")
+        x_axis_selector = self.create_dropdown(config.get("x_axis_options", []), config.get("x_axis_options", [])[0])
 
         def update_plot(x_axis):
             fig = self._landing_viz.plt_speed(x_axis)
@@ -99,11 +100,12 @@ class VisualizationWidgets(WidgetHelper):
     @ErrorHandler.log_exceptions
     def side_view(self):
         """Display the side view visualization."""
+        config = self._get_visualization_config("side_view")
         key_events = self._landing_service.get_filtered_key_events(
-            EventMarkerHelper.get_event_keys_side_view().keys(), event_type='landing'
+            EventMarkerHelper.get_event_keys_side_view().keys(), event_type=config.get("key_event_type", "")
         )
         key_events_selector = self.create_select_multiple(key_events, key_events)
-        x_axis_selector = self.create_dropdown(['Horizontal distance', 'Time', 'Distance'], 'Horizontal distance')
+        x_axis_selector = self.create_dropdown(config.get("x_axis_options", []), config.get("x_axis_options", [])[0])
 
         def update_plot(x_axis, key_events):
             fig = self._landing_viz.plt_side_view(x_axis, list(key_events))
@@ -117,8 +119,9 @@ class VisualizationWidgets(WidgetHelper):
     @ErrorHandler.log_exceptions
     def overhead_view(self):
         """Display the overhead view visualization."""
+        config = self._get_visualization_config("overhead_view")
         key_events = self._landing_service.get_filtered_key_events(
-            EventMarkerHelper.get_event_keys_overhead().keys(), event_type='landing'
+            EventMarkerHelper.get_event_keys_overhead().keys(), event_type=config.get("key_event_type", "")
         )
         key_events_selector = self.create_select_multiple(key_events, key_events)
 
@@ -131,8 +134,9 @@ class VisualizationWidgets(WidgetHelper):
     @ErrorHandler.log_exceptions
     def map_2d(self):
         """Display the 2D map visualization."""
+        config = self._get_visualization_config("map_2d")
         key_events = self._landing_service.get_filtered_key_events(
-            EventMarkerHelper.get_event_keys_2d_map().keys(), event_type='pattern'
+            EventMarkerHelper.get_event_keys_2d_map().keys(), event_type=config.get("key_event_type", "")
         )
         key_events_selector = self.create_select_multiple(key_events, key_events)
 
@@ -145,7 +149,8 @@ class VisualizationWidgets(WidgetHelper):
     @ErrorHandler.log_exceptions
     def map_3d(self):
         """Display the 3D map visualization."""
-        key_events = tuple(self._landing_service.get_key_events()['landing'].keys())
+        config = self._get_visualization_config("map_3d")
+        key_events = tuple(self._landing_service.get_key_events()[config.get("key_event_type", "")].keys())
         key_events_selector = self.create_select_multiple(key_events, key_events)
 
         def update_plot(key_events):
