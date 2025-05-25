@@ -26,9 +26,17 @@ class VisualizationWidgets(WidgetHelper):
         """Helper to display the visualization with tabs."""
         description_text = self._load_template(title, description, details)
         description_tab = self.create_html_label(description_text)
-        settings_tab = widgets.VBox(selectors)
+        settings_tab = widgets.VBox([widgets.HBox(selectors)])
         tab = self.create_tab(description_tab, settings_tab, tab_titles=["Description", "Settings"])
         display(tab, interactive_plot)
+
+    def _create_selector_boxes(self, selectors):
+        """Create labeled widgets for the given selectors."""
+        boxes = []
+        for idx, (label, widget) in enumerate(selectors.items()):
+            margin = "0 0 0 10px" if idx > 0 else None
+            boxes.append(self.create_labeled_widget(label, widget, margin=margin))
+        return boxes
 
     def exit_overview(self):
         """Display the exit overview visualization."""
@@ -49,9 +57,11 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "X-axis", "content": "Options include Horizontal distance, Time, and Distance."}
         ]
 
-        parameter_box = self.create_labeled_widget("Parameters", parameter_selector)
-        x_axis_box = self.create_labeled_widget("X-axis", x_axis_selector, margin="0 0 0 10px")
-        self._display_visualization(title, description, details, interactive_plot, [widgets.HBox([parameter_box, x_axis_box])])
+        selector_boxes = self._create_selector_boxes({
+            "Parameters": parameter_selector,
+            "X-axis": x_axis_selector
+        })
+        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def landing_overview(self):
         """Display the landing overview visualization."""
@@ -80,11 +90,12 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Metrics", "content": "Elevation, horizontal speed, vertical speed, dive angle, and glide ratio."},
             {"label": "Events Indicators", "content": "Vertical lines provide additional information about certain events."}
         ]
-
-        parameter_box = self.create_labeled_widget("Parameters", parameter_selector)
-        key_events_box = self.create_labeled_widget("Key Events", key_events_selector, margin="0 0 0 10px")
-        x_axis_box = self.create_labeled_widget("X-axis", x_axis_selector, margin="0 0 0 10px")
-        self._display_visualization(title, description, details, interactive_plot, [widgets.HBox([parameter_box, key_events_box, x_axis_box])])
+        selector_boxes = self._create_selector_boxes({
+            "Parameters": parameter_selector,
+            "Key Events": key_events_selector,
+            "X-axis": x_axis_selector
+        })
+        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def horizontal_speed(self):
         """Display the horizontal speed visualization."""
@@ -104,8 +115,8 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Speed Profile", "content": "The plot illustrates your horizontal speed, showing velocity changes."},
             {"label": "Performance Insights", "content": "Analyze speed variations to identify areas for improvement."}
         ]
-        x_axis_box = self.create_labeled_widget("X-axis", x_axis_selector)
-        self._display_visualization(title, description, details, interactive_plot, [widgets.HBox([x_axis_box])])
+        selector_boxes = self._create_selector_boxes({ "X-axis": x_axis_selector})
+        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def side_view(self):
         """Display the side view visualization."""
@@ -136,9 +147,11 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Event Markers", "content": "Key events are marked along your flight path."}
         ]
 
-        key_events_box = self.create_labeled_widget("Key Events", key_events_selector)
-        x_axis_box = self.create_labeled_widget("X-axis", x_axis_selector, margin="0 0 0 10px")
-        self._display_visualization(title, description, details, interactive_plot, [widgets.HBox([key_events_box, x_axis_box])])
+        selector_boxes = self._create_selector_boxes({
+            "Key Events": key_events_selector,
+            "X-axis": x_axis_selector
+        })
+        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def overhead_view(self):
         """Display the overhead view visualization."""
@@ -160,8 +173,8 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Event Markers", "content": "Key events are marked along your flight path."}
         ]
 
-        key_events_box = self.create_labeled_widget("Key Events", key_events_selector)
-        self._display_visualization(title, description, details, interactive_plot, [widgets.HBox([key_events_box])])
+        selector_boxes = self._create_selector_boxes({"Key Events": key_events_selector})
+        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def map_2d(self):
         """Display the 2D map visualization."""
@@ -183,8 +196,8 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Event Markers", "content": "Key events are marked along your flight path."}
         ]
 
-        key_events_box = self.create_labeled_widget("Key Events", key_events_selector)
-        self._display_visualization(title, description, details, interactive_plot, [widgets.HBox([key_events_box])])
+        selector_boxes = self._create_selector_boxes({"Key Events": key_events_selector})
+        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
 
     def map_3d(self):
         """Display the 3D map visualization."""
@@ -205,5 +218,5 @@ class VisualizationWidgets(WidgetHelper):
             {"label": "Interactive Exploration", "content": "Rotate, zoom, and pan the map to explore your flight from different angles and perspectives."},
             {"label": "Event Markers", "content": "Key events are marked along your flight path."}
         ]
-        key_events_box = self.create_labeled_widget("Key Events", key_events_selector)
-        self._display_visualization(title, description, details, interactive_plot, [widgets.HBox([key_events_box])])
+        selector_boxes = self._create_selector_boxes({"Key Events": key_events_selector})
+        self._display_visualization(title, description, details, interactive_plot, selector_boxes)
