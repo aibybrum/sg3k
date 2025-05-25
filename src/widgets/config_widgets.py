@@ -181,10 +181,7 @@ class ConfigWidgets(WidgetHelper):
         description_html = self._file_helper.load_template('config_description.html')
         description_text = widgets.HTML(value=description_html)
 
-        tab = self.create_tab(config_widgets, description_text)
-        tab.set_title(0, 'Configuration')
-        tab.set_title(1, 'Description')
-
+        tab = self.create_tab(config_widgets, description_text, tab_titles=["Configuration", "Description"])
         display(tab)
 
     @property

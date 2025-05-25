@@ -25,28 +25,14 @@ class WidgetHelper:
         )
 
     @ErrorHandler.log_exceptions
-    def create_tab(self, description_content, settings_content):
-        """Create a tab widget with description and settings."""
+    def create_tab(self, *tab_contents, tab_titles=None):
+        """Create a tab widget with specified contents and titles."""
         tab = widgets.Tab()
-        tab.children = [widgets.VBox([description_content]), widgets.VBox([settings_content])]
-        tab.set_title(0, 'Description')
-        tab.set_title(1, 'Settings')
+        tab.children = [widgets.VBox([content]) for content in tab_contents]
+        if tab_titles:
+            for i, title in enumerate(tab_titles):
+                tab.set_title(i, title)
         return tab
-
-    # @ErrorHandler.log_exceptions
-    # def display_visualization(self, title, description, details, interactive_plot, selectors):
-    #     """Display the visualization with description and settings."""
-    #     description_content = self._load_description_template(title, description, details)
-    #     settings_content = widgets.HBox([widgets.VBox(selectors)])
-    #     tab = self.create_tab(description_content, settings_content)
-    #     display(tab, interactive_plot)
-
-    # def _load_description_template(self, title, description, details):
-    #     """Load and populate the description template."""
-    #     details_html = "".join(
-    #         f"<b>{detail['label']}:</b> {detail['content']}<br>" for detail in details
-    #     )
-    #     return widgets.HTML(value=f"<h3>{title}</h3><p>{description}</p>{details_html}")
 
     @ErrorHandler.log_exceptions
     def create_dropdown(self, options, value, description='', width='auto'):
