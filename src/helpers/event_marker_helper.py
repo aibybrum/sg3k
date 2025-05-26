@@ -3,16 +3,6 @@ from utils import EventKeys
 
 class EventMarkerHelper:
     @staticmethod
-    def get_event_keys_overview():
-        return {
-            EventKeys.TOGGLE_SEARCH.value: 'Elevation',
-            EventKeys.INIT_TURN.value: 'Elevation',
-            EventKeys.START_ROLLOUT.value: 'Elevation',
-            EventKeys.STOP_ROLLOUT.value: 'Elevation',
-            EventKeys.MAX_HORZ_SPEED.value: 'Horizontal speed'
-        }
-
-    @staticmethod
     def get_event_keys_speed():
         return {
             EventKeys.MAX_HORZ_SPEED.value: 'Horizontal speed',

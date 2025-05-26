@@ -47,6 +47,7 @@ landing:
     min_dist_peaks: 0.1
     thres_lows: 0.75
     min_dist_lows: 0.1
+
 exit:
   elevation:
     thres_peaks: 0.9
@@ -63,6 +64,7 @@ exit:
     min_dist_peaks: 2
     thres_lows: 0.7
     min_dist_lows: 2
+    
 pond:
   horz_speed:
     thres_peaks: 0.6

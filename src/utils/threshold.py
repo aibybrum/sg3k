@@ -15,9 +15,7 @@ class Threshold:
 
     @ErrorHandler.log_exceptions
     def detect_peaks_lows(self, metric):
-        """
-        Detects peaks and lows in the provided metric based on threshold values.
-        """
+        """Detects peaks and lows in the provided metric based on threshold values."""
         if metric is None or len(metric) == 0:
             ErrorHandler.log_and_raise_error(ValueError, "Input metric is empty or invalid")
         

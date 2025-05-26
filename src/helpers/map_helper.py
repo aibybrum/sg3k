@@ -6,13 +6,13 @@ from helpers.file_helper import FileHelper
 
 
 class MapHelper:
-    def __init__(self, token, axis_helper, key_events, key_event_colors, validator=None):
+    def __init__(self, token, axis_helper, key_events, key_event_colors, validator=None, file_helper=None):
         self._token = token
         self._axis_helper = axis_helper
         self._key_events = key_events
         self._key_event_colors = key_event_colors
         self._validator = validator or Validator()
-        self._file_helper = FileHelper()
+        self._file_helper = file_helper or FileHelper()
 
     def generate_map_html(self, mean_lat, mean_lon, geojson_data_js, height=700, width=100):
         """Generate HTML template for Mapbox 3D visualization."""

@@ -30,6 +30,8 @@ visualizations:
     details:
       - label: "Speed Profile"
         content: "The plot illustrates your horizontal speed, showing velocity changes."
+      - label: "Performance Insights"
+        content: "Identify areas where you can improve your speed and agility by analyzing the speed variations throughout the flight."
     x_axis_options: ['Horizontal distance', 'Time', 'Distance']
 
   side_view:
@@ -38,6 +40,12 @@ visualizations:
     details:
       - label: "Flight Path Profile"
         content: "A profile view of your flight path, offering a clear observation of the landing’s rollout."
+      - label: "Rollout Details"
+        content: "This perspective reveals the steepness of your descent and your proximity to the gate during the approach."
+      - label: "Maneuver Altitude"
+        content: "Gain insight into the altitude at which you initiated your maneuver, providing valuable information for performance analysis."
+      - label: "Event Markers"
+        content: "Key events are marked along your flight path."
     x_axis_options: ['Horizontal distance', 'Time', 'Distance']
     key_event_type: 'landing'
 
@@ -47,6 +55,8 @@ visualizations:
     details:
       - label: "Flight Trajectory"
         content: "Your flight path is plotted, giving you a bird’s-eye view of your skydive."
+      - label: "Event Markers"
+        content: "Key events are marked along your flight path."
     key_event_type: 'landing'
 
   map_2d:
@@ -55,6 +65,8 @@ visualizations:
     details:
       - label: "Flight Path"
         content: "Your flight trajectory is clearly marked on the map, giving you a top-down view of your skydive."
+      - label: "Event Markers"
+        content: "Key events are marked along your flight path."
     key_event_type: 'pattern'
 
   map_3d:
@@ -63,4 +75,10 @@ visualizations:
     details:
       - label: "Flight Path"
         content: "Your flight trajectory is vividly overlaid on high-resolution satellite imagery, providing a real-world context to your skydive."
+      - label: "Altitude Representation"
+        content: "The altitude changes during your swoop are represented in 3D, giving you a clear view of your descent and landing approach."
+      - label: "Interactive Exploration"
+        content: "Rotate, zoom, and pan the map to explore your flight from different angles and perspectives."
+      - label: "Event Markers"
+        content: "Key events are marked along your flight path."
     key_event_type: 'landing'

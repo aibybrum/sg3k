@@ -9,6 +9,6 @@ services:
       - ./notebooks:/home/jovyan/notebooks
       - ./src:/home/jovyan/src
       - ./config:/home/jovyan/config
-      - ./assets:/home/jovyan/assets
+      - ./assets:/home/jovyan/notebooks/assets
     env_file:
       - .env

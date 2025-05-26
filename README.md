@@ -7,8 +7,6 @@ The Sw00pGenerator3000 offers a suite of visualizations designed to provide a co
 - **Identify Key Events:** Key events like the start of toggle search, init_turn, start of rollout, max horizontal speed, and stop rollout are clearly marked for detailed analysis.
 - **Interactive Exploration:** Use interactive features to zoom in on specific sections of your flight path for a more granular examination.
 
-These visualizations are more than just graphs; they are tools to help you understand the dynamics of your skydive and to refine your technique for future jumps. Enjoy the journey of discovery and improvement with Sw00pGenerator3000!
-
 ## Requirements
 
 To successfully use the Sw00pGenerator3000, you'll need the following:
@@ -17,7 +15,7 @@ To successfully use the Sw00pGenerator3000, you'll need the following:
 - **Docker**: A platform for developing, shipping, and running applications in containers.
 - **Mapbox token**: An access token for using Mapbox services, required for some of the visualization features.
 
-## Steps to Get Started 
+## Steps to Get Started
 
 1. Clone this repository
 2. Execute **'make copy'** or **'make c'** to generate an **.env** file
@@ -32,30 +30,30 @@ The Sw00pGenerator3000 provides a comprehensive set of metrics to help you refin
 ```
 Flight Data
 ===========
-exited airplane:          7175.0 ft AGL
+exited airplane:          6829.1 ft AGL
 
 Sw00p Data
 ==========
-toggle search:            897.5 ft AGL, 170.1 m back, -98.1 m offset
-initiated turn:           849.8 ft AGL, 123.9 m back, -82.4 m offset
-max vertical speed:       286.2 ft AGL, 20.7 m back, -85.9 m offset (103.1 km/u)
-started rollout:          267.5 ft AGL, 19.5 m back, -85.4 m offset (102.7 km/u)
-finished rollout:         87.2 ft AGL, 0.0 m back, 0.0 m offset
-max horizontal speed:     119.2 ft AGL, 11.0 m back, -46.6 m offset (87.8 km/u)
+toggle search:            791.4 ft AGL, 48.1 m back, -140.4 m offset
+initiated turn:           765.3 ft AGL, 50.0 m back, -106.7 m offset
+max vertical speed:       205.4 ft AGL, 90.9 m back, -2.2 m offset (104.9 km/u)
+started rollout:          205.4 ft AGL, 90.9 m back, -2.2 m offset (104.9 km/u)
+finished rollout:         2.2 ft AGL, 0.0 m back, 0.0 m offset
+max horizontal speed:     28.3 ft AGL, 50.4 m back, -5.1 m offset (92.3 km/u)
 
-degrees of rotation:      272 deg (left-hand)
-time to execute turn:     14.2 sec
-time during rollout:      4.4 sec
-time aloft during swoop:  9.8 sec
+degrees of rotation:      271 deg (left-hand)
+time to execute turn:     13.6 sec
+time during rollout:      4.6 sec
+time aloft during swoop:  5.2 sec
 
-entry gate speed:         66.8 km/u
-distance to stop:         108.36 m
+entry gate speed:         68.9 km/u
+distance to stop:         53.08 m
 
 Landing Pattern
 ===============
-downwind to base:         233.4 m, 2.57 gr
-base to pom:              204.01 m, 2.82 gr
-downwind to pom:          437.41 m, 2.69 gr
+downwind to base:         166.43 m, 2.29 gr
+base to pom:              192.71 m, 2.18 gr
+downwind to pom:          359.14 m, 2.23 gr
 ```
 
 ## Visualizations
