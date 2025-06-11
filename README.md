@@ -1,21 +1,27 @@
-# Sw00pGenerator3000 (SG3K)
+# SG3K // Sw00pGenerator3000
 
-The Sw00pGenerator3000 offers a suite of visualizations designed to provide a comprehensive understanding of your skydive swoop landing. These visualizations deliver an in-depth analysis of your performance, enabling you to pinpoint areas for improvement and enhance your skills. With these tools, you can:
+The SG3K offers a suite of visualizations designed to provide a comprehensive understanding of your skydive swoop landing. These visualizations deliver an in-depth analysis of your performance, enabling you to pinpoint areas for improvement and enhance your skills. With these tools, you can:
 
 - **Visualize Your Flight:** See your flight trajectory overlaid on satellite imagery or in a normal plot, giving you a real-world perspective on your flight.
 - **Analyze Key Metrics:** Examine critical metrics such as elevation, horizontal speed, vertical speed, dive angle, and glide ratio, all in one line for clarity.
 - **Identify Key Events:** Key events like the start of toggle search, init_turn, start of rollout, max horizontal speed, and stop rollout are clearly marked for detailed analysis.
 - **Interactive Exploration:** Use interactive features to zoom in on specific sections of your flight path for a more granular examination.
 
-## Requirements
+## 📋 Requirements
 
-To successfully use the Sw00pGenerator3000, you'll need the following:
+To successfully use the SG3K, you'll need the following:
 
-- **Make**: A build automation tool to manage the build process.
-- **Docker**: A platform for developing, shipping, and running applications in containers.
+- **Make**: A build automation tool to manage the build process.  
+    - [Install on macOS](https://stackoverflow.com/questions/10265742/how-to-install-make-and-gcc-on-a-mac)
+    - [Install on Linux (Ubuntu)](https://www.geeksforgeeks.org/how-to-install-make-on-ubuntu/)
+    - [Install on Windows](https://sp21.datastructur.es/materials/guides/make-install.html)
+- **Docker**: A platform for developing, shipping, and running applications in containers. (https://docs.docker.com/engine/install/):
+    - [Install on Windows, macOS, and Linux - Official Guide](https://docs.docker.com/engine/install/)
+    - [Step-by-step tutorial](https://dev.to/abhay_yt_52a8e72b213be229/how-to-install-docker-on-windows-macos-and-linux-a-step-by-step-guide-3a2i)
 - **Mapbox token**: An access token for using Mapbox services, required for some of the visualization features.
+    - [Official Mapbox Website](https://www.mapbox.com/maps)
 
-## Steps to Get Started
+## 🚀 Getting started
 
 1. Clone this repository
 2. Execute **'make copy'** or **'make c'** to generate an **.env** file
@@ -23,9 +29,9 @@ To successfully use the Sw00pGenerator3000, you'll need the following:
 4. Run **'make docker-compose-up'** or **'make dc'**
 5. Navigate to http://localhost:8888/lab/tree/notebooks/sg3k_pro.ipynb and follow the instructions in the notebook
 
-## Flight Analysis Metrics
+## 📊 Flight Analysis Metrics
 
-The Sw00pGenerator3000 provides a comprehensive set of metrics to help you refine your swooping skills. Below are the key performance indicators for your recent flight:
+The SG3K provides a comprehensive set of metrics to help you refine your swooping skills. Below are the key performance indicators for your recent flight:
 
 ```
 Flight Data
@@ -56,9 +62,9 @@ base to pom:              192.71 m, 2.18 gr
 downwind to pom:          359.14 m, 2.23 gr
 ```
 
-## Visualizations
+## 📈 Visualizations
 
-The Sw00pGenerator3000 provides a range of visualizations to help you gain a deeper understanding of your flight. These visualizations offer a detailed breakdown of your performance, allowing you to identify areas for improvement and refine your skills.
+The SG3K provides a range of visualizations to help you gain a deeper understanding of your flight. These visualizations offer a detailed breakdown of your performance, allowing you to identify areas for improvement and refine your skills.
 
 ### Overview
 
@@ -103,12 +109,12 @@ Explore the intricacies of your skydive swoop landing with our detailed 2D map v
 
 ![2dmap](assets/img/2dmap.png)
 
-### 3D Map
+### 3D Map 
 
 Dive into the details of your skydive swoop landing with our immersive 3D map visualization. Here’s what you’re seeing:
 - **Flight Path:** Your flight trajectory is vividly overlaid on high-resolution satellite imagery, providing a real-world context to your skydive.
 - **Altitude Representation:** The altitude changes during your swoop are represented in 3D, giving you a clear view of your descent and landing approach.
 - **Interactive Exploration:** Rotate, zoom, and pan the map to explore your flight from different angles and perspectives.
-- **Event Markers:** Key events are marked along your flight path.
+- **Event Markers:** Key events are marked along your flight path. 
 
 ![3dmap](assets/img/3dmap.png)
